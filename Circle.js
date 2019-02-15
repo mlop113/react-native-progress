@@ -1,21 +1,21 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { Animated, ART, StyleSheet, Text, View } from 'react-native';
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import { Animated, ART, StyleSheet, View } from 'react-native'
 
-import Arc from './Shapes/Arc';
-import withAnimation from './withAnimation';
+import Arc from './Shapes/Arc'
+import withAnimation from './withAnimation'
 
-const CIRCLE = Math.PI * 2;
+const CIRCLE = Math.PI * 2
 
-const AnimatedSurface = Animated.createAnimatedComponent(ART.Surface);
-const AnimatedArc = Animated.createAnimatedComponent(Arc);
+const AnimatedSurface = Animated.createAnimatedComponent(ART.Surface)
+const AnimatedArc = Animated.createAnimatedComponent(Arc)
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'transparent',
-    overflow: 'hidden',
-  },
-});
+    overflow: 'hidden'
+  }
+})
 
 export class ProgressCircle extends Component {
   static propTypes = {
@@ -28,9 +28,10 @@ export class ProgressCircle extends Component {
     fill: PropTypes.string,
     formatText: PropTypes.func,
     indeterminate: PropTypes.bool,
+    countDownTimer: PropTypes.bool,
     progress: PropTypes.oneOfType([
       PropTypes.number,
-      PropTypes.instanceOf(Animated.Value),
+      PropTypes.instanceOf(Animated.Value)
     ]),
     rotation: PropTypes.instanceOf(Animated.Value),
     showsText: PropTypes.bool,
@@ -38,10 +39,11 @@ export class ProgressCircle extends Component {
     style: PropTypes.any,
     strokeCap: PropTypes.oneOf(['butt', 'square', 'round']),
     textStyle: PropTypes.any,
+    start: PropTypes.number,
     thickness: PropTypes.number,
     unfilledColor: PropTypes.string,
-    endAngle: PropTypes.number,
-  };
+    endAngle: PropTypes.number
+  }
 
   static defaultProps = {
     borderWidth: 1,
@@ -52,67 +54,70 @@ export class ProgressCircle extends Component {
     showsText: false,
     size: 40,
     thickness: 3,
-    endAngle: 0.9,
-  };
-
-  constructor(props, context) {
-    super(props, context);
-
-    this.progressValue = 0;
+    endAngle: 0.9
   }
 
-  componentWillMount() {
+  constructor (props, context) {
+    super(props, context)
+
+    this.progressValue = 0
+  }
+
+  componentWillMount () {
     if (this.props.animated) {
       this.props.progress.addListener(event => {
-        this.progressValue = event.value;
+        this.progressValue = event.value
         if (this.props.showsText || this.progressValue === 1) {
-          this.forceUpdate();
+          this.forceUpdate()
         }
-      });
+      })
     }
   }
 
-  render() {
+  render () {
     const {
-      animated,
-      borderColor,
-      borderWidth,
-      color,
-      children,
-      direction,
-      fill,
-      formatText,
-      indeterminate,
-      progress,
-      rotation,
-      showsText,
-      size,
-      style,
-      strokeCap,
-      textStyle,
-      thickness,
-      unfilledColor,
-      endAngle,
-      ...restProps
-    } = this.props;
+            animated,
+            borderColor,
+            borderWidth,
+            color,
+            children,
+            direction,
+            fill,
+            formatText,
+            indeterminate, countDownTimer,
+            progress,
+            rotation,
+            showsText,
+            start,
+            size,
+            style,
+            strokeCap,
+            textStyle,
+            thickness,
+            unfilledColor,
+            endAngle,
+            ...restProps
+          } = this.props
 
-    const border = borderWidth || (indeterminate ? 1 : 0);
+    const border = borderWidth || (indeterminate ? 1 : 0)
 
-    const radius = size / 2 - border;
+    const radius = size / 2 - border
     const offset = {
       top: border,
-      left: border,
-    };
-    const textOffset = border + thickness;
-    const textSize = size - textOffset * 2;
+      left: border
+    }
 
-    const Surface = rotation ? AnimatedSurface : ART.Surface;
-    const Shape = animated ? AnimatedArc : Arc;
-    const progressValue = animated ? this.progressValue : progress;
+    const textOffset = border + thickness
+    const textSize = size - textOffset * 2
+
+    const Surface = rotation ? AnimatedSurface : ART.Surface
+    const Shape = animated ? AnimatedArc : Arc
+    const progressValue = animated ? this.progressValue : progress
+
     const angle = animated
-      ? Animated.multiply(progress, CIRCLE)
-      : progress * CIRCLE;
-
+        ? Animated.multiply(progress, CIRCLE)
+      : progress * CIRCLE
+    console.log(progress._value)
     return (
       <View style={[styles.container, style]} {...restProps}>
         <Surface
@@ -124,12 +129,12 @@ export class ProgressCircle extends Component {
                 rotate:
                   indeterminate && rotation
                     ? rotation.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: ['0deg', '360deg'],
-                      })
-                    : '0deg',
-              },
-            ],
+                      inputRange: [0, 1],
+                      outputRange: ['0deg', '360deg']
+                    })
+                    : '0deg'
+              }
+            ]
           }}
         >
           {unfilledColor && progressValue !== 1 ? (
@@ -146,6 +151,78 @@ export class ProgressCircle extends Component {
           ) : (
             false
           )}
+
+
+          {countDownTimer ? (
+            <Shape
+              fill={fill}
+              radius={radius}
+              offset={offset}
+              startAngle={0}
+              endAngle={start * CIRCLE}
+              direction={direction}
+              stroke={'#ff884c'}
+              strokeCap={'round'}
+              strokeWidth={thickness}
+            />
+          ) : (
+            false
+          )}
+
+
+
+          {countDownTimer ? (
+              <Shape
+                fill='#000000'
+                radius={radius}
+                offset={{
+                  top: -0.5,
+                  left: -0.5
+                }}
+                startAngle={start * CIRCLE}
+                endAngle={start * CIRCLE}
+                direction={direction}
+                stroke={'white'}
+                strokeCap={'round'}
+                strokeWidth={thickness - 0.5}
+              />
+          ) : (
+            false
+          )}
+          {countDownTimer ? (
+            <Shape
+              fill={fill}
+              radius={radius}
+              offset={{
+                top: -start * 0.1 ,
+                left: -start
+              }}
+              startAngle={start * CIRCLE}
+              endAngle={start * CIRCLE}
+              direction={direction}
+              stroke={'red'}
+              strokeCap={'round'}
+              strokeWidth={thickness - 3}
+            />
+          ) : (
+            false
+          )}
+
+          {countDownTimer ? (
+            <Shape
+              fill={fill}
+              radius={radius}
+              offset={offset}
+              endAngle={(progress._value + 0.01) * CIRCLE}
+              direction={direction}
+              stroke={'white'}
+              strokeCap={'round'}
+              strokeWidth={thickness}
+            />
+          ) : (
+            false
+          )}
+
           {!indeterminate ? (
             <Shape
               fill={fill}
@@ -161,6 +238,8 @@ export class ProgressCircle extends Component {
           ) : (
             false
           )}
+
+
           {border ? (
             <Arc
               radius={size / 2}
@@ -184,7 +263,7 @@ export class ProgressCircle extends Component {
               height: textSize,
               borderRadius: textSize / 2,
               alignItems: 'center',
-              justifyContent: 'center',
+              justifyContent: 'center'
             }}
           >
             {children}
@@ -193,8 +272,8 @@ export class ProgressCircle extends Component {
           false
         )}
       </View>
-    );
+    )
   }
 }
 
-export default withAnimation(ProgressCircle);
+export default withAnimation(ProgressCircle)
