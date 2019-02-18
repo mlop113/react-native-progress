@@ -194,8 +194,8 @@ export class ProgressCircle extends Component {
               fill={fill}
               radius={radius}
               offset={{
-                top: start < 0.5 ? - start : (start > 0.75 ? start : - start),
-                left: start < 0.5 ? start : (start > 0.75 ? - start  : - start),
+                top: start < 0.5 ? - start / 0.25 : (start > 0.75 ? start / 2 : - start),
+                left: start < 0.5 ? start / 0.5 : (start > 0.75 ? - start : - start / 0.5),
               }}
               startAngle={start * CIRCLE}
               endAngle={start * CIRCLE}
