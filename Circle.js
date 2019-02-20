@@ -29,12 +29,14 @@ export class ProgressCircle extends Component {
     formatText: PropTypes.func,
     indeterminate: PropTypes.bool,
     countDownTimer: PropTypes.bool,
+    originProgress: PropTypes.number,
     progress: PropTypes.oneOfType([
       PropTypes.number,
       PropTypes.instanceOf(Animated.Value)
     ]),
     rotation: PropTypes.instanceOf(Animated.Value),
     showsText: PropTypes.bool,
+    isDownTimer: PropTypes.bool,
     size: PropTypes.number,
     style: PropTypes.any,
     strokeCap: PropTypes.oneOf(['butt', 'square', 'round']),
@@ -52,6 +54,7 @@ export class ProgressCircle extends Component {
     formatText: progress => `${Math.round(progress * 100)}%`,
     progress: 0,
     showsText: false,
+    originProgress: 0,
     size: 40,
     thickness: 3,
     endAngle: 0.9
@@ -94,7 +97,9 @@ export class ProgressCircle extends Component {
             strokeCap,
             textStyle,
             thickness,
+            isDownTimer,
             unfilledColor,
+            originProgress,
             endAngle,
             ...restProps
           } = this.props
@@ -142,7 +147,7 @@ export class ProgressCircle extends Component {
               fill={fill}
               radius={radius}
               offset={offset}
-              startAngle={angle}
+              startAngle={0}
               endAngle={CIRCLE}
               direction={direction}
               stroke={unfilledColor}
@@ -153,7 +158,7 @@ export class ProgressCircle extends Component {
           )}
 
 
-          {countDownTimer ? (
+          {countDownTimer && originProgress > 0 ? (
             <Shape
               fill={fill}
               radius={radius}
@@ -171,7 +176,7 @@ export class ProgressCircle extends Component {
 
 
 
-          {countDownTimer ? (
+          {countDownTimer && isDownTimer ? (
               <Shape
                 fill='#000000'
                 radius={radius}
@@ -189,7 +194,7 @@ export class ProgressCircle extends Component {
           ) : (
             false
           )}
-          {countDownTimer ? (
+          {countDownTimer && isDownTimer ? (
             <Shape
               fill={fill}
               radius={radius}
@@ -208,7 +213,7 @@ export class ProgressCircle extends Component {
             false
           )}
 
-          {countDownTimer ? (
+          {countDownTimer && progressValue > 0 ? (
             <Shape
               fill={fill}
               radius={radius}
@@ -223,7 +228,7 @@ export class ProgressCircle extends Component {
             false
           )}
 
-          {!indeterminate ? (
+          {!indeterminate && progress._value > 0 ? (
             <Shape
               fill={fill}
               radius={radius}
