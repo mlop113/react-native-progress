@@ -176,7 +176,7 @@ export class ProgressCircle extends Component {
 
 
 
-            {countDownTimer && isDownTimer && start > 0 ? (
+          {countDownTimer && isDownTimer && start > 0 ? (
               <Shape
                 fill='#000000'
                 radius={radius}
