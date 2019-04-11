@@ -203,16 +203,16 @@ export class ProgressCircle extends Component {
                   (start < 0.5 ? (start < 0.4 ? - start * 3.5 : - 1.5)
                     : (start < 0.75 ? (start < 0.65 ? -1.75 : - 1) :
                       (start === 0.75 ? - 0.5 :
-                        (start < 0.975 ? (start <= 0.95 ? 0.25 : -0.25) : 1.2))))
-                  : (start < 0.2 ? (start >= 0.1 ? 0 : 0.25) :
+                        (start < 0.975 ? (start < 0.85 ? -0.25 : 0.5) : 1.2))))
+                  : (start < 0.2 ? (start >= 0.1 ? 0.5 : 1) :
                     (start <= 0.25 ? 0 : start * 2.5)) ,
 
                 left: start > 0.25 ?
-                  (start < 0.5 ? (start < 0.4 ? start * 2 : 0)
-                  : (start < 0.75 ? (start < 0.6 ? -start : -start * 2.5) :
-                      (start <= 0.85 ? -1.5 :
+                  (start < 0.5 ? (start < 0.4 ? start * 2 : 0.5)
+                  : (start < 0.75 ? (start < 0.6 ? -start : -start * 2) :
+                      (start < 0.85 ? -1.5 :
                         (start < 0.975 ? -start : 0)))) :
-                  (start >= 0.1 ? 1.25 : 0.5)
+                  (start >= 0.1 ? 1 : 0.5)
               }}
               startAngle={start * CIRCLE}
               endAngle={start * CIRCLE}
