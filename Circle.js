@@ -76,7 +76,17 @@ export class ProgressCircle extends Component {
       })
     }
   }
-
+  getPosition () {
+    const {start, thickness, size} = this.props
+    const angleRad = start * Math.PI * 2
+    const radiusMin = (thickness - 2) / 10
+    const radiusMax = thickness / 10
+    let topMin = (radiusMin * Math.cos(angleRad) )
+    let leftMin = (radiusMin * Math.sin(angleRad))
+    let topMax = (radiusMax * Math.cos(angleRad)) / size
+    let leftMax = (radiusMax * Math.sin(angleRad)) / size
+    return {topMin, leftMin, topMax, leftMax}
+  }
   render () {
     const {
             animated,
@@ -122,7 +132,7 @@ export class ProgressCircle extends Component {
     const angle = animated
         ? Animated.multiply(progress, CIRCLE)
       : progress * CIRCLE
-  
+    const {topMin, leftMin, topMax, leftMax} = this.getPosition()
     return (
       <View style={[styles.container, style]} {...restProps}>
         <Surface
@@ -173,24 +183,21 @@ export class ProgressCircle extends Component {
           ) : (
             false
           )}
-
-
-
           {countDownTimer && isDownTimer && start > 0 ? (
-              <Shape
-                fill='#000000'
-                radius={radius}
-                offset={{
-                 top: -0.55,
-                  left: 0
-                }}
-                startAngle={start * CIRCLE}
-                endAngle={start * CIRCLE}
-                direction={direction}
-                stroke={'white'}
-                strokeCap={'round'}
-                strokeWidth={thickness - 0.5}
-              />
+            <Shape
+              fill='#000000'
+              radius={radius}
+//               offset={{
+//                 top: topMax,
+//                 left: leftMax
+//               }}
+              startAngle={(start - 0.0085) * CIRCLE}
+              endAngle={(start - 0.0075) * CIRCLE}
+              direction={direction}
+              stroke={'white'}
+              strokeCap={'round'}
+              strokeWidth={thickness}
+            />
           ) : (
             false
           )}
@@ -199,32 +206,19 @@ export class ProgressCircle extends Component {
               fill={fill}
               radius={radius}
               offset={{
-                top: start > 0.25 ?
-                  (start < 0.5 ? (start < 0.4 ? - start * 3.5 : - 1.5)
-                    : (start < 0.75 ? (start < 0.65 ? -1.75 : - 1) :
-                      (start === 0.75 ? - 0.5 :
-                        (start < 0.975 ? (start < 0.85 ? -0.25 : 0.5) : 1.2))))
-                  : (start < 0.2 ? (start >= 0.1 ? 0.5 : 1) :
-                    (start <= 0.25 ? 0 : start * 2.5)) ,
-
-                left: start > 0.25 ?
-                  (start < 0.5 ? (start < 0.4 ? start * 2 : 0.5)
-                  : (start < 0.75 ? (start < 0.6 ? -start : -start * 2) :
-                      (start < 0.85 ? -1.5 :
-                        (start < 0.975 ? -start : 0)))) :
-                  (start >= 0.1 ? 1 : 0.5)
+                top: topMin,
+                left: leftMin
               }}
-              startAngle={start * CIRCLE}
-              endAngle={start * CIRCLE}
+              startAngle={(start - 0.0083) * CIRCLE}
+              endAngle={(start - 0.0078) * CIRCLE}
               direction={direction}
               stroke={'red'}
               strokeCap={'round'}
-              strokeWidth={thickness - 3}
+              strokeWidth={thickness - 2}
             />
           ) : (
             false
           )}
-
           {countDownTimer && progressValue > 0 ? (
             <Shape
               fill={fill}
